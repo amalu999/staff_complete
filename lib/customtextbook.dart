@@ -75,7 +75,7 @@ class _CustomTextBookState extends State<CustomTextBook> {
                           onTap:(){
                             setState(() {
                               setValues('${snap[index]['ID']}');
-                              takeOrder("${snap[index]['SUBJECT']}","${snap[index]['NAME']}","${snap[index]['AUTHOR']}","${snap[index]['BEG']}","${snap[index]['END']}","${snap[index]['PAGES']}",
+                              takeOrder("${snap[index]['SUBJECT']}","${snap[index]['MAIL']}","${snap[index]['NAME']}","${snap[index]['AUTHOR']}","${snap[index]['BEG']}","${snap[index]['END']}","${snap[index]['PAGES']}",
                                   "${snap[index]['COPIES']}","${snap[index]['PRICE']}","${snap[index]['AMOUNT']}","${snap[index]['STUDENT']}","${snap[index]['PHN']}","${snap[index]['ADMNO']}");
 
 
@@ -94,12 +94,11 @@ class _CustomTextBookState extends State<CustomTextBook> {
     );
   }
 
-  void takeOrder(sub,nam, auth,starting,ending,page,copy, pri, amo, std,phone, adno) {
+  void takeOrder(sub,mail,nam, auth,starting,ending,page,copy, pri, amo, std,phone,adno) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => CustomOrderDetails(subject: sub,nameOfBook: nam,author: auth,beg: starting,end: ending,pages: page,copies: copy,price: pri,amount: amo,student: std,
-        phn: phone,admno: adno,),
+      builder: (context) => CustomOrderDetails(subject: sub,mail:mail,nameOfBook: nam,author: auth,beg: starting,end: ending,pages: page,copies: copy,price: pri,amount: amo,student: std,
+          phn: phone,admno:adno),
     ),);
 
   }
 }
-

@@ -31,20 +31,33 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-          padding: EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Icon(Icons.account_circle, size: 200, color: Colors.white,),
+    return Scaffold(
+      backgroundColor: Colors.white,
 
-                boxUi(),
-              ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+
+                padding: EdgeInsets.all(10.0),
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+
+                      children: <Widget>[
+                        Icon(Icons.account_circle, size: 200, color: Colors.blueGrey,),
+
+                        boxUi(),
+                      ],
+                    ),
+                  ),
+                ),
             ),
-          )
+          ),
+        ),
       ),
-    );
+      );
+
   }
 
 
@@ -92,10 +105,12 @@ class _RegistrationState extends State<Registration> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+
           children: <Widget>[
+
             TextField(
               controller: emailctrl,
-              decoration: InputDecoration(prefixIcon: Icon(Icons.account_box,),
+              decoration: InputDecoration(prefixIcon: Icon(Icons.account_box,color: Colors.blueGrey,),
                   hintText: 'email'),
               keyboardType:TextInputType.emailAddress,
             ),
@@ -103,17 +118,19 @@ class _RegistrationState extends State<Registration> {
 
             TextField(
               controller: passctrl,
-              decoration: InputDecoration(prefixIcon: Icon(Icons.lock,),
+              decoration: InputDecoration(prefixIcon: Icon(Icons.lock,color: Colors.blueGrey,),
                   hintText: 'pass'),
+              obscureText: true,
             ),
 
             SizedBox(height: 10.0,),
 
             MaterialButton(
+
                 onPressed: () => userSignIn(),
                 child: processing == false ? Text('Sign In',
                   style: GoogleFonts.varelaRound(fontSize: 18.0,
-                      color: Colors.black),) : CircularProgressIndicator(
+                      color: Colors.blueGrey),) : CircularProgressIndicator(
                   backgroundColor: Colors.red,)
 
             ),

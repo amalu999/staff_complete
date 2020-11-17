@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'textbook.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 class OrderDetails extends StatefulWidget {
   final String nameOfBook;
   final String author;
@@ -16,9 +17,10 @@ class OrderDetails extends StatefulWidget {
   final String phn;
   final String admno;
   final String ord;
+  final String mail;
+  final url;
 
-
-  const OrderDetails({Key key,this.ord,this.subject, this.nameOfBook, this.author, this.copies, this.price, this.amount, this.student, this.phn, this.admno}) : super(key: key);
+  const OrderDetails({Key key,this.ord,this.subject, this.nameOfBook, this.author, this.copies, this.price, this.amount, this.student, this.phn, this.admno,this.mail, this.url}) : super(key: key);
 
   @override
   _OrderDetailsState createState() => _OrderDetailsState();
@@ -28,7 +30,18 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   var processing=false;
   var ordId;
-
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
   void getValues() async {
     print('Getting Values from shared Preferences');
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
@@ -63,6 +76,38 @@ class _OrderDetailsState extends State<OrderDetails> {
     setState(() {
       processing = false;
     });
+  }
+
+
+
+  final String _subjectController = "order ready";
+
+
+
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> send() async {
+    final Email email = Email(
+      body: "Your order $ordId, ${widget.nameOfBook} by ${widget.author} is ready.Your total is ${widget.amount}.PLEASE COLLECT ASAP  ",
+      subject: _subjectController,
+      recipients: [widget.mail],
+    );
+
+    String platformResponse;
+
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'success';
+    } catch (error) {
+      platformResponse = error.toString();
+    }
+
+    if (!mounted) return;
+
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(platformResponse),
+    ));
   }
 
   @override
@@ -100,8 +145,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.subject,style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,
+                              color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -113,7 +158,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.nameOfBook,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -125,7 +170,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.author,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -137,7 +182,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.copies,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -149,7 +194,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.price,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -161,7 +206,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.amount,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -173,7 +218,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.student,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -185,7 +230,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.phn,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -198,7 +243,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
                           TextSpan(text: widget.admno,style: TextStyle(
-                            fontWeight: FontWeight.normal,color: Colors.blueGrey
+                              fontWeight: FontWeight.normal,color: Colors.blueGrey
                           ))
                         ]
                     ),
@@ -327,16 +372,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                   SizedBox(width: 30,),
                   Row(children: <Widget>[
                     RaisedButton(
-                        child: Icon(Icons.check),
+                        child: Icon(Icons.print),
                         color: Colors.blueGrey,
-                        onPressed:() {markasprint();}
+                        onPressed:() {markasprint();
+                        send();}
                     ),
                     SizedBox(width: 40,),
-                    RaisedButton(child:Icon(Icons.print),
+                    RaisedButton(child:Icon(Icons.chrome_reader_mode),
                         color: Colors.blueGrey,
                         onPressed:(){
-                      // direct to print
-                    } )
+                          _launchInBrowser(widget.url);
+                        } )
                   ],)
                 ],),
             )

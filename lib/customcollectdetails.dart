@@ -1,10 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 class CustomcollectDetails extends StatefulWidget {
+
   final String subject;
   final String  nameOfBook;
   final String author;
@@ -22,9 +23,17 @@ class CustomcollectDetails extends StatefulWidget {
   @override
   _CustomcollectDetailsState createState() => _CustomcollectDetailsState();
 }
-
 class _CustomcollectDetailsState extends State<CustomcollectDetails> {
-
+  Future<void> _launched;
+  String _phone = '';
+  Future<void> _makePhoneCall(String url) async{
+    if(await canLaunch(url)){
+      await launch(url);
+    }
+    else{
+      throw 'could not launch $url';
+    }
+  }
   var processing=false;
   var ordId;
 
@@ -39,29 +48,30 @@ class _CustomcollectDetailsState extends State<CustomcollectDetails> {
 
 
 
-  void cmarkasprint() async{
-
+  void cmarkascollect() async{
     setState(() {
       processing = true;
     });
 
-    var url ="https://designproject---eprint.000webhostapp.com/customcollect.php";
+    var url = "https://designproject---eprint.000webhostapp.com/customcollect.php";
 
     var data = {
-      "ordid":ordId,
+      "ordid": ordId,
 
     };
-    var res = await http.post(url,body:data);
-    if(jsonDecode(res.body) == "true"){
-      Fluttertoast.showToast(msg: "Marked as Printed",toastLength: Toast.LENGTH_SHORT);}
-    else{
-
-      Fluttertoast.showToast(msg: "error",toastLength: Toast.LENGTH_SHORT);
+    var res = await http.post(url, body: data);
+    if (jsonDecode(res.body) == "true") {
+      Fluttertoast.showToast(
+          msg: "Item collected", toastLength: Toast.LENGTH_SHORT);
+    }
+    else {
+      Fluttertoast.showToast(msg: "error", toastLength: Toast.LENGTH_SHORT);
     }
 
     setState(() {
       processing = false;
     });
+
   }
 
   @override
@@ -134,7 +144,10 @@ class _CustomcollectDetailsState extends State<CustomcollectDetails> {
                         child: RaisedButton(
                             child: Center(child: Icon(Icons.phone)),
                             color: Colors.blueGrey,
-                            onPressed:() {}
+                            onPressed:() {
+                              _phone = widget.phn;
+                              _launched=_makePhoneCall('tel:$_phone');
+                            }
 
                         ),
                       ),
@@ -272,15 +285,10 @@ class _CustomcollectDetailsState extends State<CustomcollectDetails> {
                     RaisedButton(
                       child: Icon(Icons.check),
                 color: Colors.blueGrey,
-                      onPressed:(){cmarkasprint();
+                      onPressed:(){cmarkascollect();
                         //_launchInBrowser(url);
                       }, ),
-                    SizedBox(width: 40,),
-                    RaisedButton(child:Icon(Icons.print),
-                        color: Colors.blueGrey,
-                        onPressed:(){
-                      // direct to print
-                    } )
+
                   ],)
 
 

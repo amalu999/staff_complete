@@ -25,7 +25,16 @@ class collectDetails extends StatefulWidget {
 }
 
 class _collectDetailsState extends State<collectDetails> {
-
+Future<void> _launched;
+String _phone = '';
+Future<void> _makePhoneCall(String url) async{
+  if(await canLaunch(url)){
+    await launch(url);
+  }
+  else{
+    throw 'could not launch $url';
+  }
+}
   var processing = false;
   var ordId;
 
@@ -127,8 +136,10 @@ class _collectDetailsState extends State<collectDetails> {
                         child: RaisedButton(
                             child: Center(child: Icon(Icons.phone)),
                             color: Colors.blueGrey,
-                            onPressed:() {}
-
+                            onPressed:() {
+                              _phone = widget.phn;
+                              _launched=_makePhoneCall('tel:$_phone');
+                            }
                         ),
                       ),
                       SizedBox(width: 40,),

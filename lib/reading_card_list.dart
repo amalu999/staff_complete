@@ -87,7 +87,7 @@ class ReadingListCard extends StatelessWidget {
                           width: 101,
                           padding: EdgeInsets.symmetric(vertical: 10),
                           alignment: Alignment.center,
-                          child: Text("VISIBLE"),
+                          child: Text("VIEW"),
                           //onTap: () {
                           //  Navigator.of(context).push(MaterialPageRoute(
                             //  builder: (context) =>   CustomTextBook(),

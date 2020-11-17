@@ -38,16 +38,16 @@ class _TextbookState extends State<Textbook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: PreferredSize(
-         preferredSize: Size.fromHeight(50.0),
-         child: AppBar(
-           brightness: Brightness.dark,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: AppBar(
+            brightness: Brightness.dark,
 
-           title: Text("ORDER FOR BOOKS",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+            title: Text("ORDER FOR BOOKS",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
 
-           backgroundColor: Colors.blueGrey[900],
-         ),
-       ),
+            backgroundColor: Colors.blueGrey[900],
+          ),
+        ),
 
         body: Container(
           width: double.infinity,
@@ -82,6 +82,7 @@ class _TextbookState extends State<Textbook> {
                               setValues('${snap[index]['ID']}');
                               takeOrder(
                                   "${snap[index]['ID']}",
+                                  "${snap[index]['MAIL']}",
                                   "${snap[index]['SUBJECT']}",
                                   "${snap[index]['NAME']}",
                                   "${snap[index]['AUTHOR']}",
@@ -90,7 +91,8 @@ class _TextbookState extends State<Textbook> {
                                   "${snap[index]['AMOUNT']}",
                                   "${snap[index]['STUDENT']}",
                                   "${snap[index]['PHN']}",
-                                  "${snap[index]['ADMNO']}");
+                                  "${snap[index]['ADMNO']}",
+                              "${snap[index]['URL']}");
                             });
                           },
 
@@ -105,11 +107,12 @@ class _TextbookState extends State<Textbook> {
     );
   }
 
-  void takeOrder(ID,sub, nam, auth, copy, pri, amo, std, phone, adno) {
+  void takeOrder(ID,mail,sub, nam, auth, copy, pri, amo, std, phone, adno,url) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) =>
           OrderDetails(
             ord :ID,
+            mail:mail,
             subject: sub,
             nameOfBook: nam,
             author: auth,
@@ -118,7 +121,8 @@ class _TextbookState extends State<Textbook> {
             amount: amo,
             student: std,
             phn: phone,
-            admno: adno,),
+            admno: adno,
+          url: url),
     ),);
   }
 }

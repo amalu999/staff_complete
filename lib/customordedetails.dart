@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 class CustomOrderDetails extends StatefulWidget {
   final String subject;
   final String  nameOfBook;
@@ -17,8 +19,10 @@ class CustomOrderDetails extends StatefulWidget {
   final String student;
   final String phn;
   final String admno;
+  final String mail;
+  final url;
 
-  const CustomOrderDetails({Key key, this.subject, this.nameOfBook, this.author, this.beg, this.end, this.pages, this.copies, this.price, this.amount, this.student, this.phn, this.admno}) : super(key: key);
+  const CustomOrderDetails({Key key, this.subject, this.nameOfBook, this.author, this.beg, this.end, this.pages, this.copies, this.price, this.amount, this.student, this.phn, this.admno,this.mail, this.url}) : super(key: key);
   @override
   _CustomOrderDetailsState createState() => _CustomOrderDetailsState();
 }
@@ -27,6 +31,18 @@ class _CustomOrderDetailsState extends State<CustomOrderDetails> {
 
   var processing=false;
   var ordId;
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   void getValues() async {
     print('Getting Values from shared Preferences');
@@ -64,6 +80,35 @@ class _CustomOrderDetailsState extends State<CustomOrderDetails> {
     });
   }
 
+  final String _subjectController = "order ready";
+
+
+
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> send() async {
+    final Email email = Email(
+      body: "Your order $ordId, ${widget.nameOfBook} by ${widget.author} is ready.Your total is ${widget.amount}.PLEASE COLLECT ASAP  ",
+      subject: _subjectController,
+      recipients: [widget.mail],
+    );
+
+    String platformResponse;
+
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'success';
+    } catch (error) {
+      platformResponse = error.toString();
+    }
+
+    if (!mounted) return;
+
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(platformResponse),
+    ));
+  }
   @override
   void initState() {
     super.initState();
@@ -179,18 +224,18 @@ class _CustomOrderDetailsState extends State<CustomOrderDetails> {
                     ),
                   ),
                   SizedBox(height: 20,),
-                  RichText(
+               /*   RichText(
                     text: TextSpan(
                         text: "PRICE:   ",
                         style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
                         children: [
-                          TextSpan(text: widget.price,style: TextStyle(
+                          TextSpan(text: widget.price.toString(),style: TextStyle(
                             fontWeight: FontWeight.normal,color: Colors.blueGrey,
                           ))
                         ]
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20,),*/
                   RichText(
                     text: TextSpan(
                         text: "AMOUNT:   ",
@@ -242,17 +287,18 @@ class _CustomOrderDetailsState extends State<CustomOrderDetails> {
 
                   Row(children: <Widget>[
                     RaisedButton(
-                      child: Icon(Icons.check),
+                      child: Icon(Icons.print),
                       color: Colors.blueGrey,
                       onPressed:(){cmarkasprint();
+                      send();
                         //_launchInBrowser(url);
                       }, ),
                     SizedBox(width: 40,),
-                    RaisedButton(child:Icon(Icons.print)
-                       , color: Colors.blueGrey  ,
+                    RaisedButton(child:Icon(Icons.chrome_reader_mode)
+                        , color: Colors.blueGrey  ,
                         onPressed:(){
-                      // direct to print
-                    } )
+                      _launchInBrowser(widget.url);
+                        } )
                   ],)
 
 

@@ -63,29 +63,32 @@ class _pricechangeState extends State<pricechange> {
 
           backgroundColor: Colors.blueGrey[900],
         ),
-        endDrawer: MenuBar(),
+
 
         backgroundColor: Colors.white,
-        body: Container(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
 
 
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  controller: newctrl,
-                  decoration: InputDecoration(prefixIcon: Icon(Icons.account_box,color: Colors.blueGrey ,),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: newctrl,
+                    decoration: InputDecoration(prefixIcon: Icon(Icons.account_box,color: Colors.blueGrey ,),
 
-                      hintText: 'new rate',),
-                  keyboardType: TextInputType.numberWithOptions(),
-                  style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),
-                ),
-                RaisedButton(
-                    child: Text("edit"),
-                    onPressed: () {edit();}
-                ),
+                        hintText: 'new rate',),
+                    keyboardType: TextInputType.numberWithOptions(),
+                    style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),
+                  ),
+                  RaisedButton(
+                      child: Text("edit"),
+                      onPressed: () {edit();}
+                  ),
 
-              ],),
-          )
+                ],),
+            ),
+        )
 
     );
   }

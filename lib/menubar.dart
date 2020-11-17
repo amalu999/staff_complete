@@ -29,8 +29,8 @@ class _MenuBarState extends State<MenuBar> {
               fit: BoxFit.fill ,
       ),
     ),
-                accountName: Text('MACE'),
-                accountEmail: Text('myprintings@gmail.com'),
+                accountName: Text('MACE XEROX CENTRE'),
+                accountEmail: Text('eprintingsapp2020@gmail.com'),
                 currentAccountPicture: CircleAvatar(
                   child: Text('MACE'),
                   backgroundColor: Colors.white,
@@ -40,32 +40,15 @@ class _MenuBarState extends State<MenuBar> {
 
 
               ListTile(
-                  leading: Icon(Icons.attach_money),
-                  title: Text('Price Change'),
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => pricechange(),
-                    ),);
-                  }
-              ),
-              ListTile(
                   leading: Icon(Icons.settings),
-                  title: Text('Account logout'),
+                  title: Text('Settings'),
                   onTap: (){Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => Settings(),
                   ),);
 
                   }
               ),
-              ListTile(
-                  leading: Icon(Icons.feedback),
-                  title: Text('feedback'),
-                  onTap: (){Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => feedback(),
-                  ),);
 
-                  }
-              ),
               ListTile(
                   leading: Icon(Icons.history),
                   title: Text('history'),

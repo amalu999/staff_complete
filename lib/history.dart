@@ -49,7 +49,6 @@ class _historyState extends State<history> {
           backgroundColor: Colors.blueGrey[900],
 
         ),
-        endDrawer: MenuBar(),
         body: FutureBuilder(
             future: getData(
                 'https://designproject---eprint.000webhostapp.com/historydisplay.php'),

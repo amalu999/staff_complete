@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:staff_deco/pricechange.dart';
 
 import 'homepage.dart';
 
@@ -25,28 +26,38 @@ class _SettingsState extends State<Settings> {
         appBar: AppBar(
           brightness: Brightness.dark,
 
-          title: Text("LOGOUT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+          title: Text("SETTINGS",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
 
           backgroundColor: Colors.blueGrey[900],
         ),
-        endDrawer: MenuBar(),
-        backgroundColor: Colors.grey,
-        body: Container(
-            child:
 
-
-            Center(
-              child: RaisedButton(
-                  child: Text("log out"),
-                  color: Colors.blueGrey,
-                  onPressed: () {
+        backgroundColor: Colors.white,
+        body:Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('Price Change'),
+                  onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MyApp(),
+                        builder: (context) => pricechange(),
                     ),);
-                  }),
-            )
+                  }
+              ),
+              ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Logout',style: TextStyle(color: Colors.blue),),
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MyApp()
+                    ),);
+                  }
+              ),
+            ],
+          ),
         )
-
 
     );
   }
